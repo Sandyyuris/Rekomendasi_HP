@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Rekomendasi HP - Fuzzy Logic</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
+        }
+        .header-bg {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); /* Tema Hijau */
+            color: white;
+            padding: 40px 0;
+            margin-bottom: 30px;
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .score-badge {
+            font-size: 0.9em;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .table thead th {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            color: #495057;
+        }
+        .price-tag {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .antutu-tag {
+            font-weight: bold;
+            color: #e67e22; /* Oranye */
+        }
+        .camera-tag {
+            color: #555;
+            font-weight: 500;
+        }
+        .btn-primary {
+            background-color: #11998e;
+            border-color: #11998e;
+        }
+        .btn-primary:hover {
+            background-color: #0e857b;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-bg text-center">
+        <div class="container">
+            <h1 class="fw-bold"><i class="fas fa-mobile-alt me-2"></i>SmartRec Phone</h1>
+            <p class="lead mb-0">Sistem Pendukung Keputusan Pemilihan Smartphone (Fuzzy Logic)</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card p-4">
+                    <h5 class="card-title mb-3"><i class="fas fa-filter me-2"></i>Filter Budget Anda</h5>
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-7">
+                            <label for="budgetInput" class="form-label text-muted">Masukkan Maksimal Budget (Rupiah)</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="number" class="form-control form-control-lg" id="budgetInput" placeholder="Contoh: 2000000">
+                            </div>
+                        </div>
+                        <div class="col-md-5 d-flex gap-2">
+                            <button class="btn btn-primary btn-lg w-100" onclick="filterData()">
+                                <i class="fas fa-search me-1"></i> Cari
+                            </button>
+                            <button class="btn btn-outline-secondary btn-lg w-100" onclick="resetFilter()">
+                                <i class="fas fa-list me-1"></i> Semua
+                            </button>
+                        </div>
+                    </div>
+                    <div id="filterInfo" class="mt-2 text-muted small">Sedang memuat data...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card p-4 mt-3">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold mb-0 text-secondary">Hasil Rekomendasi</h4>
+                <span class="badge bg-secondary" id="countData">Loading...</span>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="text-center">Rank</th>
+                            <th scope="col">Nama Smartphone</th>
+                            <th scope="col">Harga</th>
+                            <th scope="col" class="text-center">RAM</th>
+                            <th scope="col" class="text-center">ROM</th>
+                            <th scope="col" class="text-center">Baterai</th>
+                            <th scope="col" class="text-center">Kamera</th>
+                            <th scope="col" class="text-center">AnTuTu</th> 
+                            <th scope="col" class="text-center">Rekomendasi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        </tbody>
+                </table>
+            </div>
+
+            <div id="emptyMessage" class="text-center py-5 d-none">
+                <img src="https://cdn-icons-png.flaticon.com/512/7486/7486744.png" width="100" alt="Not Found" class="mb-3 opacity-50">
+                <h5 class="text-muted">Tidak ada HP yang sesuai budget tersebut.</h5>
+                <p class="text-muted small">Coba naikkan sedikit budget Anda.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center py-4 text-muted small">
+        &copy; 2025 Project AI Fuzzy Logic Team. Built with Python & Bootstrap 5.
+    </div>
+
+    <script>
+        let databaseHP = [];
+
+        async function loadData() {
+            const tableBody = document.getElementById('tableBody');
+            
+            try {
+                const response = await fetch('data_hasil.json');
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                databaseHP = await response.json();
+                resetFilter();
+
+            } catch (error) {
+                console.error("Gagal memuat data:", error);
+                document.getElementById('countData').innerText = "Gagal Memuat";
+                document.getElementById('filterInfo').innerText = "Gagal memuat database.";
+                
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="9" class="text-center text-danger py-5">
+                            <i class="fas fa-exclamation-triangle fa-3x mb-3"></i><br>
+                            <h5 class="fw-bold">Gagal Memuat Data JSON</h5>
+                            <p class="mb-0">Pastikan file <code>data_hasil.json</code> ada di folder yang sama.</p>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        function renderTable(data) {
+            const tbody = document.getElementById('tableBody');
+            const emptyMsg = document.getElementById('emptyMessage');
+            const countLabel = document.getElementById('countData');
+            
+            tbody.innerHTML = ''; 
+            countLabel.innerText = `${data.length} Data Ditemukan`;
+
+            if (data.length === 0) {
+                emptyMsg.classList.remove('d-none');
+                return;
+            } else {
+                emptyMsg.classList.add('d-none');
+            }
+
+            data.forEach((hp, index) => {
+                // LOGIKA WARNA HIJAU
+                let badgeClass = 'bg-danger'; 
+                let statusText = 'Kurang';
+                let icon = '<i class="fas fa-times-circle me-1"></i>';
+                
+                // Ambil Data
+                const skor = hp.Skor_Fuzzy || hp.skor || 0; 
+                const harga = hp.Harga_Juta || hp.harga || 0;
+                const ram = hp.RAM_GB || hp.ram || 0;
+                const rom = hp.ROM_GB || hp.rom || 0;
+                const baterai = hp.Baterai_mAh || hp.baterai || 0;
+                const kamera = hp.Kamera_MP || hp.kamera || 0; // Data Kamera
+                const antutu = hp.AnTuTu_Ribu || hp.antutu || 0; 
+                const nama = hp.Nama_HP || hp.nama || "Unknown";
+
+                if (skor >= 70) {
+                    badgeClass = 'bg-success'; 
+                    statusText = 'Sangat Rekomen';
+                    icon = '<i class="fas fa-check-circle me-1"></i>';
+                } else if (skor >= 40) {
+                    badgeClass = 'bg-warning text-dark'; 
+                    statusText = 'Layak';
+                    icon = '<i class="fas fa-minus-circle me-1"></i>';
+                }
+
+                const hargaRupiah = (harga * 1000000).toLocaleString('id-ID');
+
+                const row = `
+                    <tr>
+                        <td class="text-center fw-bold text-muted">#${index + 1}</td>
+                        <td>
+                            <div class="fw-bold">${nama}</div>
+                            <small class="text-muted d-block d-sm-none">Rp ${hargaRupiah}</small>
+                        </td>
+                        <td class="price-tag">Rp ${hargaRupiah}</td>
+                        <td class="text-center"><span class="badge bg-light text-dark border">${ram} GB</span></td>
+                        <td class="text-center"><span class="badge bg-light text-dark border">${rom} GB</span></td>
+                        <td class="text-center text-muted small">${baterai} mAh</td>
+                        
+                        <td class="text-center camera-tag">
+                            <i class="fas fa-camera me-1 text-secondary"></i> ${kamera} MP
+                        </td>
+
+                        <td class="text-center antutu-tag">${antutu.toLocaleString('id-ID')}k</td>
+
+                        <td class="text-center">
+                            <span class="score-badge ${badgeClass}">
+                                ${icon} ${statusText}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function filterData() {
+            const inputVal = document.getElementById('budgetInput').value;
+            const filterInfo = document.getElementById('filterInfo');
+
+            if (!inputVal) {
+                alert("Harap masukkan nominal budget!");
+                return;
+            }
+
+            const budget = parseFloat(inputVal);
+            const budgetJuta = budget / 1000000;
+
+            const filtered = databaseHP
+                .filter(hp => {
+                    const hargaHP = hp.Harga_Juta || hp.harga;
+                    return hargaHP <= budgetJuta;
+                })
+                .sort((a, b) => {
+                    const skorA = a.Skor_Fuzzy || a.skor;
+                    const skorB = b.Skor_Fuzzy || b.skor;
+                    return skorB - skorA;
+                });
+
+            filterInfo.innerHTML = `Menampilkan HP dibawah <b>Rp ${budget.toLocaleString('id-ID')}</b> (Diurutkan berdasarkan kualitas)`;
+            renderTable(filtered);
+        }
+
+        function resetFilter() {
+            document.getElementById('budgetInput').value = '';
+            document.getElementById('filterInfo').innerHTML = 'Menampilkan semua data HP yang tersedia.';
+            
+            const allData = [...databaseHP].sort((a, b) => {
+                const skorA = a.Skor_Fuzzy || a.skor;
+                const skorB = b.Skor_Fuzzy || b.skor;
+                return skorB - skorA;
+            });
+            renderTable(allData);
+        }
+        window.onload = loadData;
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+[
+    {
+        "Nama_HP":"Samsung S23 Ultra",
+        "Harga_Juta":18.0,
+        "RAM_GB":12,
+        "ROM_GB":512,
+        "Baterai_mAh":5000,
+        "Kamera_MP":200,
+        "AnTuTu_Ribu":1500,
+        "Skor_Fuzzy":90.0,
+        "Keterangan":"Sangat Rekomen"
+    },
+    {
+        "Nama_HP":"Poco F5",
+        "Harga_Juta":5.2,
+        "RAM_GB":12,
+        "ROM_GB":256,
+        "Baterai_mAh":5000,
+        "Kamera_MP":64,
+        "AnTuTu_Ribu":1100,
+        "Skor_Fuzzy":87.33,
+        "Keterangan":"Sangat Rekomen"
+    },
+    {
+        "Nama_HP":"Infinix Note 30",
+        "Harga_Juta":2.5,
+        "RAM_GB":8,
+        "ROM_GB":256,
+        "Baterai_mAh":5000,
+        "Kamera_MP":64,
+        "AnTuTu_Ribu":400,
+        "Skor_Fuzzy":87.33,
+        "Keterangan":"Sangat Rekomen"
+    },
+    {
+        "Nama_HP":"Xiaomi Redmi 12",
+        "Harga_Juta":2.2,
+        "RAM_GB":8,
+        "ROM_GB":128,
+        "Baterai_mAh":5000,
+        "Kamera_MP":50,
+        "AnTuTu_Ribu":250,
+        "Skor_Fuzzy":70.88,
+        "Keterangan":"Sangat Rekomen"
+    },
+    {
+        "Nama_HP":"Realme C55",
+        "Harga_Juta":2.4,
+        "RAM_GB":6,
+        "ROM_GB":128,
+        "Baterai_mAh":5000,
+        "Kamera_MP":64,
+        "AnTuTu_Ribu":270,
+        "Skor_Fuzzy":64.77,
+        "Keterangan":"Layak"
+    },
+    {
+        "Nama_HP":"Samsung Galaxy A04",
+        "Harga_Juta":1.5,
+        "RAM_GB":4,
+        "ROM_GB":64,
+        "Baterai_mAh":5000,
+        "Kamera_MP":50,
+        "AnTuTu_Ribu":120,
+        "Skor_Fuzzy":60.0,
+        "Keterangan":"Layak"
+    },
+    {
+        "Nama_HP":"iPhone 11 Second",
+        "Harga_Juta":5.5,
+        "RAM_GB":4,
+        "ROM_GB":64,
+        "Baterai_mAh":3100,
+        "Kamera_MP":12,
+        "AnTuTu_Ribu":600,
+        "Skor_Fuzzy":21.11,
+        "Keterangan":"Kurang"
+    },
+    {
+        "Nama_HP":"Advan NASA Pro",
+        "Harga_Juta":0.9,
+        "RAM_GB":2,
+        "ROM_GB":32,
+        "Baterai_mAh":3000,
+        "Kamera_MP":8,
+        "AnTuTu_Ribu":90,
+        "Skor_Fuzzy":20.67,
+        "Keterangan":"Kurang"
+    }
+]
