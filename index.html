@@ -14,7 +14,7 @@
             background-color: #f0f2f5;
         }
         .header-bg {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); /* Tema Hijau */
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
             color: white;
             padding: 40px 0;
             margin-bottom: 30px;
@@ -39,7 +39,6 @@
             color: white;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        
         .table thead th {
             background-color: #f8f9fa;
             border-bottom: 2px solid #dee2e6;
@@ -51,7 +50,7 @@
         }
         .antutu-tag {
             font-weight: bold;
-            color: #e67e22; /* Oranye */
+            color: #e67e22;
         }
         .camera-tag {
             color: #555;
@@ -189,18 +188,16 @@
             }
 
             data.forEach((hp, index) => {
-                // LOGIKA WARNA HIJAU
                 let badgeClass = 'bg-danger'; 
                 let statusText = 'Kurang';
                 let icon = '<i class="fas fa-times-circle me-1"></i>';
                 
-                // Ambil Data
                 const skor = hp.Skor_Fuzzy || hp.skor || 0; 
                 const harga = hp.Harga_Juta || hp.harga || 0;
                 const ram = hp.RAM_GB || hp.ram || 0;
                 const rom = hp.ROM_GB || hp.rom || 0;
                 const baterai = hp.Baterai_mAh || hp.baterai || 0;
-                const kamera = hp.Kamera_MP || hp.kamera || 0; // Data Kamera
+                const kamera = hp.Kamera_MP || hp.kamera || 0;
                 const antutu = hp.AnTuTu_Ribu || hp.antutu || 0; 
                 const nama = hp.Nama_HP || hp.nama || "Unknown";
 
